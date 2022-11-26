@@ -9,8 +9,11 @@ import { Link } from "gatsby";
 export const MIN_NUM_ASSETS = 2;
 export const maxNumAssets = 15;
 
-const allTickersSet = new Set(Object.keys(AssetData));
-allTickersSet.delete("default");
+const getTickersWithoutDefaults = () => {
+  const tickers = new Set(Object.keys(AssetData));
+  tickers.delete("default");
+  return tickers
+}
 
 /**
  * @param {string[]} arr
@@ -27,7 +30,7 @@ const filterStrArr = (arr) => {
 const InputSchema = Yup.object().shape({
   assets: Yup.array(Yup.string())
     .compact((v) => {
-      return v === undefined || !allTickersSet.has(v.toUpperCase());
+      return v === undefined || !getTickersWithoutDefaults().has(v.toUpperCase());
     })
     .min(2, "Must have at least 2 valid asset tickers")
     .test("Unique", "Asset tickers must be unique", (values) => {
@@ -120,7 +123,7 @@ const genInputForm = (inputForm) => {
                         />
 
                         <datalist id="assets-list">
-                          {Array.from(allTickersSet).map(
+                          {Array.from(getTickersWithoutDefaults()).map(
                             (ticker, tickerIndex) => (
                               <option key={tickerIndex} value={ticker}>
                                 {`${ticker} (${AssetData[ticker].title})`}
