@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import * as styles from "../components/input-form.module.css";
 import { Link } from "gatsby";
 
-export const minNumAssets = 2;
+export const MIN_NUM_ASSETS = 2;
 export const maxNumAssets = 15;
 
 const allTickersSet = new Set(Object.keys(AssetData));
@@ -129,7 +129,7 @@ const genInputForm = (inputForm) => {
                           )}
                         </datalist>
 
-                        {values.assets.length <= minNumAssets ? null : (
+                        {values.assets.length <= MIN_NUM_ASSETS ? null : (
                           <button
                             type="button"
                             onClick={() => remove(index)}

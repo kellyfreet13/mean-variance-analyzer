@@ -2,7 +2,7 @@ import * as React from "react";
 import * as AssetData from "../../data/asset-data.json";
 import { Chart as ChartJS, registerables } from "chart.js";
 import { Chart, Pie } from "react-chartjs-2";
-import { minNumAssets, maxNumAssets } from "./input-form.js";
+import { MIN_NUM_ASSETS, maxNumAssets } from "./input-form.js";
 import * as styles from "./optimizer.module.css";
 
 const numTrials = 500000;
@@ -64,7 +64,7 @@ const arrMatProduct = (arr, mat) => {
  */
 const genNormRandWeightArr = (arrLength, constraint) => {
   // Returns a normalized (sum = 1) array of positive weights, each less than a constraint
-  if (arrLength < minNumAssets || arrLength > maxNumAssets) {
+  if (arrLength < MIN_NUM_ASSETS || arrLength > maxNumAssets) {
     throw new Error("Expected 2 <= arrLength <= 20");
   } else if (constraint < 1 / arrLength || constraint > 1) {
     throw new Error("Expected constraint in [1/arrLength, 1]");
