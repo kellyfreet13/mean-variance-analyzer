@@ -19,7 +19,7 @@ const getTickersWithoutDefaults = () => {
  * @param {string[]} arr
  * @return {string[]}
  */
-const filterStrArr = (arr) => {
+const toSortedUpper = (arr) => {
   // Return a copy of an array that contains only uppercase non-null strings in alphabetical order
   return arr
     .filter(Boolean)
@@ -27,15 +27,19 @@ const filterStrArr = (arr) => {
     .sort();
 };
 
+const uniqueFilter = (value, index, self) => {
+  return self.indexOf(value) === index
+}
+
 const InputSchema = Yup.object().shape({
   assets: Yup.array(Yup.string())
     .compact((v) => {
       return v === undefined || !getTickersWithoutDefaults().has(v.toUpperCase());
     })
     .min(2, "Must have at least 2 valid asset tickers")
-    .test("Unique", "Asset tickers must be unique", (values) => {
-      let fValues = filterStrArr(values);
-      return new Set(fValues).size === fValues.length;
+    .test("Unique", "Asset tickers must be unique", (tickers) => {
+      let unique = tickers.filter(uniqueFilter)
+      return unique.length === tickers.length;
     })
     .required("Required"),
   constraintPct: Yup.number()
@@ -91,7 +95,7 @@ const genInputForm = (inputForm) => {
         onSubmit={(values) => {
           inputForm.setState({
             showPlot: true,
-            tickers: filterStrArr(values.assets),
+            tickers: toSortedUpper(values.assets),
             ticker: values.assets,
             constraintPct: values.constraintPct,
             riskFreeRatePct: values.riskFreeRatePct,
