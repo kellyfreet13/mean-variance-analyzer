@@ -16,7 +16,7 @@ ChartJS.register(...registerables);
  * @param {number[]} arr2
  * @return {number}
  */
-const arrDotProd = (arr1, arr2) => {
+const dotProduct = (arr1, arr2) => {
   // Return the dot product of two 1-dimensional arrays
   if (arr1.length === 0 || arr1.length !== arr2.length) {
     throw new Error(
@@ -39,7 +39,7 @@ const arrDotProd = (arr1, arr2) => {
  * @param {number[][]} mat
  * @return {number}
  */
-const arrMatProduct = (arr, mat) => {
+const matProduct = (arr, mat) => {
   // Return the product arr^T.mat.arr
   if (
     arr.length === 0 ||
@@ -53,10 +53,10 @@ const arrMatProduct = (arr, mat) => {
 
   let firstProduct = [];
   for (let i = 0; i < arr.length; i++) {
-    firstProduct[i] = arrDotProd(mat[i], arr);
+    firstProduct[i] = dotProduct(mat[i], arr);
   }
 
-  return arrDotProd(arr, firstProduct);
+  return dotProduct(arr, firstProduct);
 };
 
 /**
@@ -151,8 +151,8 @@ const Optimizer = ({ tickers, constraintPct, riskFreeRatePct, children }) => {
   let maxRisk = 0;
   for (let i = 0; i < numTrials; i++) {
     weightsMat[i] = genNormRandWeightArr(tickers.length, constraint);
-    retArr[i] = arrDotProd(meanRetArr, weightsMat[i]);
-    riskArr[i] = Math.sqrt(arrMatProduct(weightsMat[i], covMatrix));
+    retArr[i] = dotProduct(meanRetArr, weightsMat[i]);
+    riskArr[i] = Math.sqrt(matProduct(weightsMat[i], covMatrix));
     sharpeRatio = (retArr[i] - riskFreeRatePct) / riskArr[i];
     if (i === 0) {
       minRisk[0] = riskArr[0];
