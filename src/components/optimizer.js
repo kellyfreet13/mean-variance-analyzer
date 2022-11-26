@@ -59,41 +59,53 @@ const matProduct = (arr, mat) => {
   return dotProduct(arr, firstProduct);
 };
 
+const randomWeights = (numWeights) => {
+  // Generate array of random weights
+  let weights = [];
+  let sum = 0;
+  const markowitz = 4.669201609102991;
+  for (let i = 0; i < numWeights; i++) {
+    weights[i] = Math.random() ** markowitz; // Exponent helps spread out Markowitz bullet
+    runSum += weights[i];
+  }
+
+  return {
+    weights: weights,
+    sum: sum,
+  }
+}
+
 /**
- * @param {number} arrLength
+ * @param {number} size
  * @param {number} constraint
  * @return {number[]}
  */
-const genNormRandWeightArr = (arrLength, constraint) => {
+const genNormRandWeightArr = (size, constraint) => {
   // Returns a normalized (sum = 1) array of positive weights, each less than a constraint
-  if (arrLength < MIN_NUM_ASSETS || arrLength > maxNumAssets) {
-    throw new Error("Expected 2 <= arrLength <= 20");
-  } else if (constraint < 1 / arrLength || constraint > 1) {
-    throw new Error("Expected constraint in [1/arrLength, 1]");
+  if (size < MIN_NUM_ASSETS || size > maxNumAssets) {
+    throw new Error("Expected 2 <= size <= 20");
+  } else if (constraint < 1 / size || constraint > 1) {
+    throw new Error("Expected constraint in [1/size, 1]");
   }
 
-  // Generate array of random weights
-  let res = [];
-  let runSum = 0;
-  for (let i = 0; i < arrLength; i++) {
-    res[i] = Math.random() ** 4.669201609102991; // Exponent helps spread out Markowitz bullet
-    runSum += res[i];
-  }
+  const weights = randomWeights();
 
+  // todo: throw this in it's own function, similar to above
   // Normalize array keeping track of any values above the constraint
   let excessVal = 0;
-  for (let i = 0; i < arrLength; i++) {
-    res[i] /= runSum;
+  for (let i = 0; i < size; i++) {
+    res[i] /= weights.sum;
     if (res[i] > constraint) {
       excessVal += res[i] - constraint;
       res[i] = constraint;
     }
   }
 
+  // todo: throw this in it's own function, similar to above
   // Redistribute excess if constraint is not met for each element
   if (excessVal > 0) {
     let diff = 0;
-    for (let i = 0; i < arrLength; i++) {
+    for (let i = 0; i < size; i++) {
       diff = constraint - res[i];
       if (diff >= excessVal) {
         res[i] += excessVal;
