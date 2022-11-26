@@ -24,12 +24,14 @@ const arrDotProd = (arr1, arr2) => {
     );
   }
 
-  let prodSum = 0;
+  // todo: no tests?
+
+  let sum = 0;
   for (let i = 0; i < arr1.length; i++) {
-    prodSum += arr1[i] * arr2[i];
+    sum += arr1[i] * arr2[i];
   }
 
-  return prodSum;
+  return sum;
 };
 
 /**
